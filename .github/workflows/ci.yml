@@ -35,7 +35,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: WaylaidCrateHelper
-          path: .release/*.zip
+          path: ${{ github.workspace }}/.release/*.zip
+          include-hidden-files: true
           if-no-files-found: error
 
   release:
