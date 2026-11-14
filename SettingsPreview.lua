@@ -7,7 +7,7 @@ ns.SettingsPreview = ns.SettingsPreview or {}
 local SettingsPreview = ns.SettingsPreview
 
 local crateID = 248682
-local previewTop = 290
+local previewTop = 338
 local examples = {
     { itemID = 2447, price = 10, bags = 3, bank = 2 },
     { itemID = 765, price = 12, bags = 0, bank = 0 },
@@ -21,7 +21,7 @@ local examples = {
 ---@return WaylaidSettingsPreview preview The preview controller.
 function SettingsPreview.Create(body)
     local heading = body:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    heading:SetPoint("TOPLEFT", 16, -267)
+    heading:SetPoint("TOPLEFT", 16, -315)
     heading:SetText(L["Example tooltip (sample prices and inventory)"])
 
     local tooltip = CreateFrame("GameTooltip", "WaylaidCrateHelperPreviewTooltip", body, "GameTooltipTemplate")

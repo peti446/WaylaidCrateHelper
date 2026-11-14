@@ -27,6 +27,7 @@ Open **Options > AddOns > Waylaid Crate Helper** to configure:
 - **Show owned materials**: Display the amount in your bags and bank.
 - **Show missing materials**: Display the quantity still needed.
 - **Show missing materials cost**: Include the estimated cost of the missing quantity.
+- **Currency format**: Show prices with coin icons or colored, localized denomination text.
 - **Show owned amount when none are owned**: Display the owned line even when its amount is zero.
 - **Show missing amount when none are owned**: Display the missing line when you own none of the material.
 

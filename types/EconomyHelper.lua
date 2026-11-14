@@ -8,7 +8,7 @@
 ---@class WaylaidEconomyHelper
 ---@field GetPriceSourceAvailability fun(): WaylaidPriceSourceAvailability
 ---@field GetItemPrice fun(item: number|string): number?
----@field FormatMoney fun(copper: number): string
+---@field FormatMoney fun(copper: number, format?: "icons"|"text"): string
 
 ---@class WaylaidCrateRequirementsHelper
 ---@field GetRequirements fun(crateItemID: number): table<number, number>?

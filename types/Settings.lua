@@ -6,6 +6,7 @@
 ---@field showMissingMoney boolean
 ---@field showOwnedWhenNothingOwned boolean
 ---@field showMissingWhenNothingOwned boolean
+---@field moneyFormat "icons"|"text"
 
 ---@type WaylaidCrateSettings?
 WaylaidCreteHelperDB = nil

@@ -19,6 +19,11 @@ local options = {
     { key = "showMissingWhenNothingOwned", name = L["Show missing amount when none are owned"], description = L["Show the missing amount when you have none of a required material."], default = false },
 }
 
+local moneyFormatOptions = {
+    { value = "icons", label = L["Coin icons"] .. " " .. GetMoneyString(10203) },
+    { value = "text", label = L["Colored text"] .. " " .. ns.EconomyHelper.FormatMoney(10203, "text") },
+}
+
 ---Registers saved settings after the addon has loaded.
 ---@param frame Frame The event frame.
 ---@param event string The event name.
@@ -144,6 +149,61 @@ local function OnAddonLoaded(frame, event, addonName)
         checkboxes[index] = check
     end
 
+    if (WaylaidCreteHelperDB.moneyFormat ~= "icons" and WaylaidCreteHelperDB.moneyFormat ~= "text") then
+        WaylaidCreteHelperDB.moneyFormat = "icons"
+    end
+
+    local moneyFormatLabel = body:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    moneyFormatLabel:SetPoint("TOPLEFT", body, "TOPLEFT", 16, -255)
+    moneyFormatLabel:SetText(L["Currency format"])
+
+    local moneyFormatDropdown = CreateFrame("DropdownButton", nil, body, "WowStyle1DropdownTemplate")
+    moneyFormatDropdown:SetWidth(270)
+    moneyFormatDropdown:SetPoint("LEFT", moneyFormatLabel, "RIGHT", 12, 0)
+
+    ---Sets the selected currency format in the dropdown.
+    ---@return nil
+    local function UpdateMoneyFormatDropdown()
+        for _, option in ipairs(moneyFormatOptions) do
+            if (option.value == WaylaidCreteHelperDB.moneyFormat) then
+                moneyFormatDropdown:OverrideText(option.label)
+                return nil
+            end
+        end
+        return nil
+    end
+
+    ---Checks whether a currency format is selected.
+    ---@param value "icons"|"text" The candidate format.
+    ---@return boolean selected Whether the format is selected.
+    local function IsMoneyFormatSelected(value)
+        return WaylaidCreteHelperDB.moneyFormat == value
+    end
+
+    ---Saves the selected currency format and refreshes the preview.
+    ---@param value "icons"|"text" The selected format.
+    ---@return nil
+    local function SetMoneyFormat(value)
+        WaylaidCreteHelperDB.moneyFormat = value
+        UpdateMoneyFormatDropdown()
+        preview.Refresh()
+        return nil
+    end
+
+    ---Builds the currency-format dropdown menu.
+    ---@param _ DropdownButton The dropdown button.
+    ---@param rootDescription RootMenuDescriptionProxy The menu description.
+    ---@return nil
+    local function BuildMoneyFormatMenu(_, rootDescription)
+        for _, option in ipairs(moneyFormatOptions) do
+            rootDescription:CreateRadio(option.label, IsMoneyFormatSelected, SetMoneyFormat, option.value)
+        end
+        return nil
+    end
+
+    moneyFormatDropdown:SetupMenu(BuildMoneyFormatMenu)
+    UpdateMoneyFormatDropdown()
+
     ns.Settings = WaylaidCreteHelperDB
     preview = ns.SettingsPreview.Create(body)
     scroll:SetScrollChild(body)
@@ -154,6 +214,7 @@ local function OnAddonLoaded(frame, event, addonName)
         for index, option in ipairs(options) do
             checkboxes[index]:SetChecked(WaylaidCreteHelperDB[option.key])
         end
+        UpdateMoneyFormatDropdown()
         preview.Refresh()
         return nil
     end
@@ -164,6 +225,7 @@ local function OnAddonLoaded(frame, event, addonName)
         for _, option in ipairs(options) do
             WaylaidCreteHelperDB[option.key] = option.default
         end
+        WaylaidCreteHelperDB.moneyFormat = "icons"
         self:OnRefresh()
         return nil
     end

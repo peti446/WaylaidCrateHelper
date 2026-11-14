@@ -1,14 +1,37 @@
 ---@type string, WaylaidCrateHelperNamespace
 local ADDON_NAME, ns = ...
+local L = ns.L
 
 ns.EconomyHelper = ns.EconomyHelper or {}
 local EconomyHelper = ns.EconomyHelper
+local goldTextColor = CreateColor(1, 0.82, 0)
+local silverTextColor = CreateColor(0.78, 0.78, 0.81)
+local copperTextColor = CreateColor(0.93, 0.65, 0.37)
 
----Formats a copper amount using the game's currency icons.
+---Formats a copper amount using icons or colored denomination text.
 ---@param copper number The amount in copper.
+---@param format? "icons"|"text" The display format; defaults to coin icons.
 ---@return string formatted The formatted currency amount.
-function EconomyHelper.FormatMoney(copper)
-    return GetMoneyString(math.floor(copper + 0.5))
+function EconomyHelper.FormatMoney(copper, format)
+    copper = math.floor(copper + 0.5)
+    if (format ~= "text") then
+        return GetMoneyString(copper)
+    end
+
+    local gold = math.floor(copper / 10000)
+    local silver = math.floor(copper / 100) % 100
+    local remainingCopper = copper % 100
+    local parts = {}
+    if (gold > 0) then
+        parts[#parts + 1] = FormatLargeNumber(gold) .. goldTextColor:WrapTextInColorCode(L["g"])
+    end
+    if (silver > 0) then
+        parts[#parts + 1] = tostring(silver) .. silverTextColor:WrapTextInColorCode(L["s"])
+    end
+    if (remainingCopper > 0 or #parts == 0) then
+        parts[#parts + 1] = tostring(remainingCopper) .. copperTextColor:WrapTextInColorCode(L["c"])
+    end
+    return table.concat(parts, " ")
 end
 
 ---Converts a value to a positive, finite price.

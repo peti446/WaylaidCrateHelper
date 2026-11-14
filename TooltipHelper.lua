@@ -18,7 +18,7 @@ function TooltipHelper.AddMaterial(tooltip, material, bagCount, bankCount, setti
     local name = material.name or string.format(L["Unknown item %d"], material.itemID)
     local totalPrice = L["Unavailable"]
     if (material.totalPrice) then
-        totalPrice = ns.EconomyHelper.FormatMoney(material.totalPrice)
+        totalPrice = ns.EconomyHelper.FormatMoney(material.totalPrice, settings.moneyFormat)
     end
     local materialR, materialG, materialB = GREEN_FONT_COLOR:GetRGB()
     local r, g, b = HIGHLIGHT_FONT_COLOR:GetRGB()
@@ -43,7 +43,7 @@ function TooltipHelper.AddMaterial(tooltip, material, bagCount, bankCount, setti
         if (settings.showMissingMoney) then
             local missingPrice = L["Unavailable"]
             if (material.price) then
-                missingPrice = ns.EconomyHelper.FormatMoney(material.price * missing)
+                missingPrice = ns.EconomyHelper.FormatMoney(material.price * missing, settings.moneyFormat)
             end
             tooltip:AddDoubleLine(text, missingPrice, r, g, b, r, g, b)
         else
