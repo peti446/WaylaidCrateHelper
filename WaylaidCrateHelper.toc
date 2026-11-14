@@ -9,6 +9,7 @@
 ## IconTexture: Interface\Icons\INV_Crate_07
 ## Category: Professions
 ## X-Curse-Project-ID: 1805497
+## X-Wago-ID: x61xXyN1
 
 Locales\enUS.lua
 Locales\deDE.lua [AllowLoadTextLocale deDE]

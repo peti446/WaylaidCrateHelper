@@ -2,6 +2,9 @@ name: CI
 
 on:
   push:
+    paths:
+      - '**.lua'
+      - '**.toc'
   workflow_dispatch:
 
 permissions:
@@ -59,4 +62,5 @@ jobs:
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_KEY }}
           WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
+          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
           GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
