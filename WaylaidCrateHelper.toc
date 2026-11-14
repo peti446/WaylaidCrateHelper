@@ -7,7 +7,7 @@
 ## SavedVariables: WaylaidCreteHelperDB
 ## OptionalDeps: Auctionator, TradeSkillMaster
 ## IconTexture: Interface\Icons\INV_Crate_07
-## Category: Helpers
+## Category: Professions
 ## X-Curse-Project-ID: 1805497
 
 Locales\enUS.lua
