@@ -3,7 +3,6 @@ local _, ns = ...
 
 ---@class WaylaidCrateHelper : WaylaidCrateHelperNamespace
 local WaylaidCrateHelper = ns
-local L = ns.L
 local TooltipHelper = ns.TooltipHelper
 
 --@debug@
@@ -12,7 +11,7 @@ local TooltipHelper = ns.TooltipHelper
 ---@param message string The diagnostic message.
 ---@return nil
 function WaylaidCrateHelper.ReportTooltipDebug(tooltip, message)
-    tooltip:AddLine(string.format(L["[Debug] %s"], message), HIGHLIGHT_FONT_COLOR:GetRGB())
+    tooltip:AddLine(string.format("[Debug] %s", message), HIGHLIGHT_FONT_COLOR:GetRGB())
     return nil
 end
 --@end-debug@
@@ -24,7 +23,7 @@ end
 function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
     if (not tooltip.GetLeftLine or not tooltip.GetRightLine) then
         --@debug@
-        WaylaidCrateHelper.ReportTooltipDebug(tooltip, L["Tooltip line access is unavailable."])
+        WaylaidCrateHelper.ReportTooltipDebug(tooltip, "Tooltip line access is unavailable.")
         tooltip:Show()
         --@end-debug@
         return nil
@@ -38,7 +37,7 @@ function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
     end
     if (requiredCount == 0) then
         --@debug@
-        WaylaidCrateHelper.ReportTooltipDebug(tooltip, L["The crate has no material requirements."])
+        WaylaidCrateHelper.ReportTooltipDebug(tooltip, "The crate has no material requirements.")
         tooltip:Show()
         --@end-debug@
         return nil
@@ -53,7 +52,7 @@ function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
         local right = tooltip:GetRightLine(index)
         if (not left) then
             --@debug@
-            WaylaidCrateHelper.ReportTooltipDebug(tooltip, string.format(L["Tooltip line %d has no left text region."], index))
+            WaylaidCrateHelper.ReportTooltipDebug(tooltip, string.format("Tooltip line %d has no left text region.", index))
             tooltip:Show()
             --@end-debug@
             return nil
@@ -106,11 +105,11 @@ function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
     if (not requirementRow or ambiguousRow or blockedByRightText) then
         --@debug@
         if (ambiguousRow) then
-            WaylaidCrateHelper.ReportTooltipDebug(tooltip, L["Multiple possible requirements rows were found."])
+            WaylaidCrateHelper.ReportTooltipDebug(tooltip, "Multiple possible requirements rows were found.")
         elseif (blockedByRightText) then
-            WaylaidCrateHelper.ReportTooltipDebug(tooltip, L["The requirements row already has right-side text."])
+            WaylaidCrateHelper.ReportTooltipDebug(tooltip, "The requirements row already has right-side text.")
         else
-            WaylaidCrateHelper.ReportTooltipDebug(tooltip, L["No requirements row with the expected quantities was found."])
+            WaylaidCrateHelper.ReportTooltipDebug(tooltip, "No requirements row with the expected quantities was found.")
         end
         tooltip:Show()
         --@end-debug@
@@ -122,7 +121,7 @@ function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
         or not tooltip:HasScript("OnTooltipCleared") or not tooltip:HasScript("OnHide")
         or not tooltip:HasScript("OnSizeChanged")) then
         --@debug@
-        WaylaidCrateHelper.ReportTooltipDebug(tooltip, L["Tooltip separator support is unavailable."])
+        WaylaidCrateHelper.ReportTooltipDebug(tooltip, "Tooltip separator support is unavailable.")
         tooltip:Show()
         --@end-debug@
         return nil
@@ -187,7 +186,7 @@ function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
     for _, material in ipairs(materialList) do
         if (not material.name) then
             WaylaidCrateHelper.ReportTooltipDebug(
-                tooltip, string.format(L["Item %d name is not available in the cache."], material.itemID)
+                tooltip, string.format("Item %d name is not available in the cache.", material.itemID)
             )
         end
     end
