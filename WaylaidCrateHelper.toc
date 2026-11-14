@@ -6,10 +6,9 @@
 ## LoadOnDemand: 0
 ## SavedVariables: WaylaidCreteHelperDB
 ## OptionalDeps: Auctionator, TradeSkillMaster
-## IconTexture: Interface\Icons\INV_Artifact_Tome02
+## IconTexture: Interface\Icons\INV_Crate_07
 ## Category: Helpers
-## X-Curse-Project-ID: TODO
-## X-WoWI-ID: TODO
+## X-Curse-Project-ID: 1805497
 
 Locales\enUS.lua
 Locales\deDE.lua [AllowLoadTextLocale deDE]
