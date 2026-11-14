@@ -28,14 +28,15 @@ jobs:
       - name: Create package
         uses: BigWigsMods/packager@v2
         with:
-          args: -d
+          args: -d -z
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_KEY }}
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
           name: WaylaidCrateHelper
-          path: ${{ github.workspace }}/.release/*.zip
+          # The wildcard keeps the addon folder at the artifact root.
+          path: ${{ github.workspace }}/.release/[Ww]aylaidCrateHelper/**
           include-hidden-files: true
           if-no-files-found: error
 
