@@ -255,7 +255,7 @@ function WaylaidCrateHelper.OnTooltipSetItem(tooltip, tooltipData)
     return nil
 end
 
-local tooltipDataProcessor = _G.TooltipDataProcessor
+local tooltipDataProcessor = TooltipDataProcessor
 if (tooltipDataProcessor and tooltipDataProcessor.AddTooltipPostCall) then
     tooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, WaylaidCrateHelper.OnTooltipSetItem)
 else
@@ -265,7 +265,7 @@ else
         hooksecurefunc(GameTooltip, "SetItemByID", WaylaidCrateHelper.OnTooltipSetItem)
     end
 
-    local itemRefTooltip = _G.ItemRefTooltip
+    local itemRefTooltip = ItemRefTooltip
     if (itemRefTooltip and itemRefTooltip:HasScript("OnTooltipSetItem")) then
         itemRefTooltip:HookScript("OnTooltipSetItem", WaylaidCrateHelper.OnTooltipSetItem)
     end

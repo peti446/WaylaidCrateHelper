@@ -36,6 +36,10 @@ read_globals = {
 	"DEFAULT_CHAT_FRAME", "ChatFrame1", "SendChatMessage", "SlashCmdList",
 	"UIErrorsFrame", "RaidNotice_AddMessage",
 
+	-- Tooltip helpers
+	"TooltipDataProcessor",
+	"ItemRefTooltip",
+
 	-- Unit / player info
 	"UnitName", "UnitClass", "UnitLevel", "UnitHealth", "UnitHealthMax",
 	"UnitExists", "UnitGUID", "UnitIsPlayer", "GetRealmName",
