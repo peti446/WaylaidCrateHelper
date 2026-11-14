@@ -35,3 +35,7 @@ The missing line is not shown when you already have enough materials. The settin
 ### Issues & Suggestions
 
 Visit [GitHub Issues](https://github.com/peti446/WaylaidCrateHelper/issues) to report problems or share suggestions.
+
+### Support
+
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/geloch)
