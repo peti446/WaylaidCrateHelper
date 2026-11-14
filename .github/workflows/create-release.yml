@@ -1,0 +1,93 @@
+name: Create Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to tag (e.g., v1.2.3). If not provided, will auto-increment patch version'
+        required: false
+        type: string
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if user is repository owner
+        env:
+          ACTOR: ${{ github.actor }}
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: |
+          if [ "$ACTOR" != "$REPOSITORY_OWNER" ]; then
+            echo "Error: Only the repository owner can trigger this workflow"
+            exit 1
+          fi
+          echo "User $ACTOR is authorized to create tags"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            VERSION="$INPUT_VERSION"
+            echo "Using provided version: $VERSION"
+          else
+            TAGS=$(git tag --list 'v*' --sort=-version:refname)
+            LATEST_TAG=""
+            while IFS= read -r TAG; do
+              if [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                LATEST_TAG="$TAG"
+                break
+              fi
+            done <<< "$TAGS"
+
+            if [ -z "$LATEST_TAG" ]; then
+              VERSION="v0.0.1"
+              echo "No existing version tags found, starting with: $VERSION"
+            else
+              IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
+              PATCH=$((10#$PATCH + 1))
+              VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+              echo "Auto-incremented version: $VERSION"
+            fi
+          fi
+
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Version must be in format vX.Y.Z (e.g., v1.2.3)"
+            exit 1
+          fi
+
+          if [ -n "$(git tag --list "$VERSION")" ]; then
+            echo "Error: Tag $VERSION already exists"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git tag -a "$VERSION" -m "Release $VERSION"
+          git push origin "$VERSION"
+          echo "Successfully created and pushed tag: $VERSION"
+
+      - name: Run CI for tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: gh workflow run ci.yml --ref "$VERSION"

@@ -1,0 +1,16 @@
+name: Update curse forge translations
+on:
+  workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    UpdateTranslations:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Upload locales strings to CurseForge
+              run: ./CurseForge_UpldateTranslations.sh
+              env:
+                CF_API_KEY: ${{ secrets.CF_API_KEY }}

@@ -1,0 +1,30 @@
+## Interface: 16001
+## Title: WaylaidCreteHelper
+## Author: Geloch (Sanguino - EU Horde)
+## Version: @project-version@
+## Notes: Shows the price to open the waylaid creates and shows what items you already have and the cost to obtain more
+## LoadOnDemand: 0
+## SavedVariables: WaylaidCreteHelperDB
+## OptionalDeps: Auctionator, TradeSkillMaster
+## IconTexture: Interface\Icons\INV_Artifact_Tome02
+## Category: Helpers
+## X-Curse-Project-ID: TODO
+## X-WoWI-ID: TODO
+
+Locales\enUS.lua
+Locales\deDE.lua [AllowLoadTextLocale deDE]
+Locales\esES.lua [AllowLoadTextLocale esES]
+Locales\esMX.lua [AllowLoadTextLocale esMX]
+Locales\frFR.lua [AllowLoadTextLocale frFR]
+Locales\itIT.lua [AllowLoadTextLocale itIT]
+Locales\koKR.lua [AllowLoadTextLocale koKR]
+Locales\ptBR.lua [AllowLoadTextLocale ptBR]
+Locales\ruRU.lua [AllowLoadTextLocale ruRU]
+Locales\zhCN.lua [AllowLoadTextLocale zhCN]
+Locales\zhTW.lua [AllowLoadTextLocale zhTW]
+WaylaidCrateInfoDB.lua
+CrateHelper.lua
+EconomyHelper.lua
+InventoryHelper.lua
+TooltipHelper.lua
+WaylaidCrateHelper.lua

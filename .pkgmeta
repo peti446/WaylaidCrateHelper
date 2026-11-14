@@ -1,0 +1,11 @@
+package-as: WaylaidCrateHelper
+
+
+enable-nolib-creation: no
+
+ignore:
+  - README.md
+  - CurseForge_UpldateTranslations.sh
+  - release.sh
+  - TypeMeta/*
+  - types/*

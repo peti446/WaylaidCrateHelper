@@ -1,0 +1,4 @@
+Libs/*
+!Libs/LibDeflate/
+.release
+release.sh
