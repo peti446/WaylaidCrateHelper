@@ -27,3 +27,5 @@ EconomyHelper.lua
 InventoryHelper.lua
 TooltipHelper.lua
 WaylaidCrateHelper.lua
+SettingsPreview.lua
+Settings.lua

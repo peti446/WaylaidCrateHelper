@@ -16,6 +16,9 @@
     ],
     "Lua.diagnostics.globals": [
         "TooltipDataProcessor",
-        "ItemRefTooltip"
-    ]
+        "ItemRefTooltip",
+        "MinimalSliderWithSteppersMixin",
+        "Settings"
+    ],
+    "Lua.type.weakUnionCheck": true
 }

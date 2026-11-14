@@ -3,7 +3,55 @@ local _, ns = ...
 
 ns.TooltipHelper = ns.TooltipHelper or {}
 local TooltipHelper = ns.TooltipHelper
+local L = ns.L
+local numberColor = CreateColor(1, 128 / 255, 0)
 local separatorStates = {}
+
+---Adds a material and its optional inventory details to a tooltip.
+---@param tooltip GameTooltip The item tooltip.
+---@param material WaylaidTooltipMaterial The material and its price.
+---@param bagCount number The amount in bags.
+---@param bankCount number The amount in the bank.
+---@param settings WaylaidCrateSettings The display settings.
+---@return nil
+function TooltipHelper.AddMaterial(tooltip, material, bagCount, bankCount, settings)
+    local name = material.name or string.format(L["Unknown item %d"], material.itemID)
+    local totalPrice = L["Unavailable"]
+    if (material.totalPrice) then
+        totalPrice = ns.EconomyHelper.FormatMoney(material.totalPrice)
+    end
+    local materialR, materialG, materialB = GREEN_FONT_COLOR:GetRGB()
+    local r, g, b = HIGHLIGHT_FONT_COLOR:GetRGB()
+    tooltip:AddDoubleLine(
+        string.format(L["- %d %s"], material.quantity, name),
+        totalPrice, materialR, materialG, materialB, r, g, b
+    )
+
+    local owned = bagCount + bankCount
+    if (settings.showOwned and (owned > 0 or settings.showOwnedWhenNothingOwned)) then
+        tooltip:AddLine(string.format(
+            L["    Owned: %s (bags: %s, bank: %s)"],
+            numberColor:WrapTextInColorCode(tostring(owned)),
+            numberColor:WrapTextInColorCode(tostring(bagCount)),
+            numberColor:WrapTextInColorCode(tostring(bankCount))
+        ), r, g, b)
+    end
+
+    local missing = math.max(material.quantity - owned, 0)
+    if (settings.showMissing and missing > 0 and (owned > 0 or settings.showMissingWhenNothingOwned)) then
+        local text = string.format(L["    Missing: %s"], numberColor:WrapTextInColorCode(tostring(missing)))
+        if (settings.showMissingMoney) then
+            local missingPrice = L["Unavailable"]
+            if (material.price) then
+                missingPrice = ns.EconomyHelper.FormatMoney(material.price * missing)
+            end
+            tooltip:AddDoubleLine(text, missingPrice, r, g, b, r, g, b)
+        else
+            tooltip:AddLine(text, r, g, b)
+        end
+    end
+    return nil
+end
 
 ---Hides separators when a tooltip is cleared or hidden.
 ---@param tooltip GameTooltip The item tooltip.

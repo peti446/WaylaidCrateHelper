@@ -18,6 +18,7 @@ exclude_files = {
 globals = {
 	"SLASH_HELLOFOREVER1",
 	"SLASH_HELLOFOREVER2",
+	"WaylaidCreteHelperDB",
 }
 
 -- Common WoW API + FrameXML globals. This is a pragmatic subset; extend as needed.

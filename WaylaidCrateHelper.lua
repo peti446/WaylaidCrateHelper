@@ -5,7 +5,6 @@ local _, ns = ...
 local WaylaidCrateHelper = ns
 local L = ns.L
 local TooltipHelper = ns.TooltipHelper
-local numberColor = CreateColor(1, 128 / 255, 0)
 
 --@debug@
 ---Adds a debug message at the end of the tooltip.
@@ -157,9 +156,9 @@ function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
         end
     )
 
+    local currentTooltipSettings = ns.SettingsHelper.GetTooltipSettings()
     tooltip:ClearLines()
     TooltipHelper.ClearSeparators(tooltip)
-    local materialR, materialG, materialB = GREEN_FONT_COLOR:GetRGB()
     for index, row in ipairs(rows) do
         if (index == requirementRow) then
             local addedMaterials = false
@@ -167,39 +166,9 @@ function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
                 if (part.requirement and not addedMaterials) then
                     for _, material in ipairs(materialList) do
                         TooltipHelper.AddSeparator(tooltip)
-                        local name = material.name or string.format(L["Unknown item %d"], material.itemID)
-                        local totalPrice = L["Unavailable"]
-                        if (material.totalPrice) then
-                            totalPrice = ns.EconomyHelper.FormatMoney(material.totalPrice)
-                        end
-                        local r, g, b = HIGHLIGHT_FONT_COLOR:GetRGB()
-                        tooltip:AddDoubleLine(
-                            string.format(L["- %d %s"], material.quantity, name),
-                            totalPrice, materialR, materialG, materialB, r, g, b
-                        )
-
                         local bagCount = ns.InventoryHelper.GetBagItemCount(material.itemID)
                         local bankCount = ns.InventoryHelper.GetBankItemCount(material.itemID)
-                        local owned = bagCount + bankCount
-                        if (owned > 0) then
-                            tooltip:AddLine(string.format(
-                                L["    Owned: %s (bags: %s, bank: %s)"],
-                                numberColor:WrapTextInColorCode(tostring(owned)),
-                                numberColor:WrapTextInColorCode(tostring(bagCount)),
-                                numberColor:WrapTextInColorCode(tostring(bankCount))
-                            ), r, g, b)
-                            local missing = math.max(material.quantity - owned, 0)
-                            if (missing > 0) then
-                                local missingPrice = L["Unavailable"]
-                                if (material.price) then
-                                    missingPrice = ns.EconomyHelper.FormatMoney(material.price * missing)
-                                end
-                                tooltip:AddDoubleLine(
-                                    string.format(L["    Missing: %s"], numberColor:WrapTextInColorCode(tostring(missing))),
-                                    missingPrice, r, g, b, r, g, b
-                                )
-                            end
-                        end
+                        TooltipHelper.AddMaterial(tooltip, material, bagCount, bankCount, currentTooltipSettings)
                     end
                     TooltipHelper.AddSeparator(tooltip)
                     addedMaterials = true
@@ -232,7 +201,7 @@ end
 ---@param tooltipData table|number|nil The tooltip data or item ID, when available.
 ---@return nil
 function WaylaidCrateHelper.OnTooltipSetItem(tooltip, tooltipData)
-    if (InCombatLockdown()) then
+    if (InCombatLockdown() or not ns.Settings) then
         return nil
     end
 
