@@ -200,7 +200,7 @@ end
 ---@param tooltipData table|number|nil The tooltip data or item ID, when available.
 ---@return nil
 function WaylaidCrateHelper.OnTooltipSetItem(tooltip, tooltipData)
-    if (InCombatLockdown() or not ns.Settings) then
+    if (InCombatLockdown() or not ns.Settings or not tooltip or type(tooltip.GetItem) ~= "function") then
         return nil
     end
 
