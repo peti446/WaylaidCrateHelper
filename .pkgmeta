@@ -4,6 +4,7 @@ package-as: WaylaidCrateHelper
 enable-nolib-creation: no
 
 optional-dependencies:
+  - foreverforge-auction
   - auctionator
   - tradeskill-master
 

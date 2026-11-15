@@ -1,6 +1,8 @@
 ---@meta
 
 ---@class WaylaidPriceSourceAvailability
+---@field foreverForgeAuctionInstalled boolean
+---@field foreverForgeAuctionDatabaseAvailable boolean
 ---@field tsmInstalled boolean
 ---@field auctionatorInstalled boolean
 ---@field auctionatorPriceDatabaseAvailable boolean

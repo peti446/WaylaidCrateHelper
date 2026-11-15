@@ -78,6 +78,63 @@ local function GetItemDetails(item)
     return itemID, link or fallbackLink, name
 end
 
+---Queries ForeverForge Auction's live Market API for an item's lowest buyout.
+---@param itemID number The item ID.
+---@return number? price The lowest buyout price in copper, or nil if unavailable or invalid.
+local function GetForeverForgeAuctionPrice(itemID)
+    local ffAuction = _G.ForeverForgeAuction
+    local market = type(ffAuction) == "table" and ffAuction.Market
+    if (type(market) ~= "table" or type(market.Get) ~= "function") then
+        return nil
+    end
+
+    local ok, entry = pcall(market.Get, market, tostring(itemID))
+    if (not ok or type(entry) ~= "table") then
+        return nil
+    end
+
+    return GetPositivePrice(entry.low)
+end
+
+---Searches ForeverForge Auction's saved database for a positive lowest buyout.
+---@param itemID number The item ID.
+---@return number? price The lowest buyout price in copper, or nil if none is found.
+local function GetForeverForgeAuctionDatabasePrice(itemID)
+    local db = _G.ForeverForgeAuctionDB
+    local marketDB = type(db) == "table" and db.market
+    if (type(marketDB) ~= "table") then
+        return nil
+    end
+
+    local realmName = GetRealmName and GetRealmName() or nil
+    if (type(realmName) ~= "string" or realmName == "") then
+        return nil
+    end
+    local realmKey = realmName:gsub("%s+", "")
+    local faction = UnitFactionGroup and UnitFactionGroup("player") or nil
+    local itemKey = tostring(itemID)
+
+    local bookKeys = {}
+    if (type(faction) == "string" and faction ~= "") then
+        bookKeys[#bookKeys + 1] = realmKey .. "-" .. faction
+    end
+    bookKeys[#bookKeys + 1] = realmKey .. "-Neutral"
+
+    for _, bookKey in ipairs(bookKeys) do
+        local book = marketDB[bookKey]
+        local items = type(book) == "table" and book.items
+        local entry = type(items) == "table" and items[itemKey]
+        if (type(entry) == "table") then
+            local price = GetPositivePrice(entry.low)
+            if (price) then
+                return price
+            end
+        end
+    end
+
+    return nil
+end
+
 ---Searches the available Auctionator saved database for a positive price.
 ---@param itemID number The item ID.
 ---@param itemLink string The item link or item string.
@@ -176,12 +233,17 @@ local function GetAuctionatorPrice(itemID, itemLink)
     return nil
 end
 
----Checks which economy addon APIs and saved database are available.
+---Checks which economy addon APIs and saved databases are available.
 ---@return WaylaidPriceSourceAvailability availability The availability of each source.
 function EconomyHelper.GetPriceSourceAvailability()
+    local ffAuction = _G.ForeverForgeAuction
     local auctionator = _G.Auctionator
 
     return {
+        foreverForgeAuctionInstalled = type(ffAuction) == "table"
+            and type(ffAuction.Market) == "table"
+            and type(ffAuction.Market.Get) == "function",
+        foreverForgeAuctionDatabaseAvailable = type(_G.ForeverForgeAuctionDB) == "table",
         tsmInstalled = type(_G.TSM_API) == "table",
         auctionatorInstalled = type(auctionator) == "table"
             or type(_G.Atr_GetAuctionBuyout) == "function"
@@ -190,7 +252,7 @@ function EconomyHelper.GetPriceSourceAvailability()
     }
 end
 
----Gets the first positive price from TSM, Auctionator, or its saved database, in that order.
+---Gets the first positive price from ForeverForge Auction, TSM, Auctionator, or their saved databases, in that order.
 ---@param item number|string An item ID, numeric string, item string, or item link.
 ---@return number? price The price in copper, or nil if no source provides one.
 function EconomyHelper.GetItemPrice(item)
@@ -200,6 +262,20 @@ function EconomyHelper.GetItemPrice(item)
     end
 
     local availability = EconomyHelper.GetPriceSourceAvailability()
+    if (availability.foreverForgeAuctionInstalled) then
+        local price = GetForeverForgeAuctionPrice(itemID)
+        if (price) then
+            return price
+        end
+    end
+
+    if (availability.foreverForgeAuctionDatabaseAvailable) then
+        local price = GetForeverForgeAuctionDatabasePrice(itemID)
+        if (price) then
+            return price
+        end
+    end
+
     if (availability.tsmInstalled) then
         local price = GetTSMPrice(itemID, itemLink)
         if (price) then

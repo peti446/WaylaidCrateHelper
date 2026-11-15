@@ -16,7 +16,7 @@ Waylaid Crate Helper helps you compare the materials needed to fill a waylaid cr
 
 Hover over a supported waylaid crate to compare its material bundles. Each material's price is for the full quantity required by the crate. If enabled, the indented lines show what you own and what you still need.
 
-Prices come from [TradeSkillMaster](https://www.curseforge.com/wow/addons/tradeskillmaster) or [Auctionator](https://www.curseforge.com/wow/addons/auctionator). TradeSkillMaster's market price is preferred when available; otherwise, the addon checks Auctionator. If no price is available, the tooltip displays "Unavailable".
+Prices come from [ForeverForge Auction](https://www.curseforge.com/wow/addons/foreverforge-auction) (lowest buyout) when available, falling back to [TradeSkillMaster](https://www.curseforge.com/wow/addons/tradeskillmaster) or [Auctionator](https://www.curseforge.com/wow/addons/auctionator). If no price is available, the tooltip displays "Unavailable".
 
 The addon counts the character's bags, personal bank, and reagent bank, but not the account bank. It does not modify tooltips during combat.
 

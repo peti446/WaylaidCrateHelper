@@ -54,7 +54,7 @@ read_globals = {
 	"RAID_CLASS_COLORS", "WrapTextInColorCode",
 
 	-- Optional economy addons
-	"TSM_API", "Auctionator", "AUCTIONATOR_PRICE_DATABASE",
+	"ForeverForgeAuction", "ForeverForgeAuctionDB", "TSM_API", "Auctionator", "AUCTIONATOR_PRICE_DATABASE",
 	"GetAuctionBuyout", "Atr_GetAuctionBuyout", "ATR_GetAuctionBuyout",
 }
 
