@@ -21,10 +21,17 @@ end
 ---@param requirements table<number, number> The crate's material requirements.
 ---@return nil
 function WaylaidCrateHelper.RebuildRequirements(tooltip, requirements)
-    if (not tooltip.GetLeftLine or not tooltip.GetRightLine) then
+    if (not tooltip.GetLeftLine or not tooltip.GetRightLine
+        or not tooltip.NumLines or not tooltip.ClearLines
+        or not tooltip.AddLine or not tooltip.AddDoubleLine
+        or not tooltip.Show) then
         --@debug@
-        WaylaidCrateHelper.ReportTooltipDebug(tooltip, "Tooltip line access is unavailable.")
-        tooltip:Show()
+        if (tooltip.AddLine) then
+            WaylaidCrateHelper.ReportTooltipDebug(tooltip, "Tooltip line access is unavailable.")
+        end
+        if (tooltip.Show) then
+            tooltip:Show()
+        end
         --@end-debug@
         return nil
     end
@@ -200,18 +207,28 @@ end
 ---@param tooltipData table|number|nil The tooltip data or item ID, when available.
 ---@return nil
 function WaylaidCrateHelper.OnTooltipSetItem(tooltip, tooltipData)
-    if (InCombatLockdown() or not ns.Settings or not tooltip or type(tooltip.GetItem) ~= "function") then
+    if (type(tooltip) ~= "table" or InCombatLockdown() or not ns.Settings) then
         return nil
     end
 
-    local _, itemLink = tooltip:GetItem()
-    local itemID = itemLink and tonumber(itemLink:match("item:(%d+)"))
+    local itemLink, directItemID
+    if (type(tooltip.GetItem) == "function") then
+        local _, link, id = tooltip:GetItem()
+        if (type(link) == "string" and (not issecretvalue or not issecretvalue(link))) then
+            itemLink = link
+        end
+        if (type(id) == "number" and (not issecretvalue or not issecretvalue(id))) then
+            directItemID = id
+        end
+    end
+
+    local itemID = itemLink and tonumber(itemLink:match("item:(%d+)")) or directItemID
     if (not itemID and type(tooltipData) == "table") then
         itemID = tooltipData.id
     elseif (not itemID and type(tooltipData) == "number") then
         itemID = tooltipData
     end
-    if (not itemID) then
+    if (type(itemID) ~= "number" or (issecretvalue and issecretvalue(itemID))) then
         return nil
     end
 
