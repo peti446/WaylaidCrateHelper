@@ -5,7 +5,7 @@
 ## Notes: Shows the price to open the waylaid creates and shows what items you already have and the cost to obtain more
 ## LoadOnDemand: 0
 ## SavedVariables: WaylaidCreteHelperDB
-## OptionalDeps: Auctionator, TradeSkillMaster
+## OptionalDeps: ForeverForge_Auction, Auctionator, TradeSkillMaster
 ## IconTexture: Interface\Icons\INV_Crate_07
 ## Category: Professions
 ## X-Curse-Project-ID: 1805497
